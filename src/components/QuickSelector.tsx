@@ -104,14 +104,21 @@ export const QuickSelector = ({
 
   // Render as Dialog/Popup (both mobile and desktop)
   return (
-    <Dialog open={isVisible} onOpenChange={(open) => {
-      console.log('🟡 Dialog onOpenChange called:', open);
-      setVisible(open);
-    }}>
-      <DialogContent className={cn(
-        "max-h-[92vh] overflow-y-auto",
-        isMobile ? "max-w-[95vw]" : "max-w-7xl w-[95vw]"
-      )}>
+    <Dialog open={isVisible} onOpenChange={setVisible}>
+      <DialogContent 
+        className={cn(
+          "max-h-[92vh] overflow-y-auto",
+          isMobile ? "max-w-[95vw]" : "max-w-7xl w-[95vw]"
+        )}
+        onPointerDownOutside={(e) => {
+          // Prevent closing when clicking outside - user must use toggle button or X button
+          e.preventDefault();
+        }}
+        onEscapeKeyDown={(e) => {
+          // Allow ESC key to close
+          setVisible(false);
+        }}
+      >
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-bold bg-gradient-to-l from-primary via-primary to-sidebar-background bg-clip-text text-transparent">
             בחירה מהירה

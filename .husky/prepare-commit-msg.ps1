@@ -16,19 +16,27 @@ $EXISTING_MSG = Get-Content $COMMIT_MSG_FILE -Raw -ErrorAction SilentlyContinue
 
 # If message is empty or default, create detailed one
 if ([string]::IsNullOrWhiteSpace($EXISTING_MSG)) {
-  $DATE = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+  $DATE = Get-Date -Format "dd/MM/yyyy בשעה HH:mm"
+  $DAY_NAME = switch ((Get-Date).DayOfWeek) {
+    "Sunday" { "ראשון" }
+    "Monday" { "שני" }
+    "Tuesday" { "שלישי" }
+    "Wednesday" { "רביעי" }
+    "Thursday" { "חמישי" }
+    "Friday" { "שישי" }
+    "Saturday" { "שבת" }
+  }
   
   @"
-🔄 שינויים אוטומטיים - גרסה $VERSION
+🔄 עדכון אוטומטי - גרסה $VERSION
 
-📋 פרטי השינוי:
-- תאריך: $DATE
-- ענף: $BRANCH
-- מספר קבצים: $CHANGED_FILES
+� יום $DAY_NAME, $DATE
+🌿 ענף: $BRANCH
+📁 קבצים ששונו: $CHANGED_FILES
 
-📝 קבצים ששונו:
+📝 רשימת שינויים:
 $CHANGED_LIST
 
-✅ שינויים אלו נשמרו אוטומטית ונסנכרנו עם GitHub
+✅ השינויים נשמרו ונסנכרנו אוטומטית עם GitHub
 "@ | Out-File -FilePath $COMMIT_MSG_FILE -Encoding UTF8
 }

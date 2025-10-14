@@ -161,6 +161,40 @@ export function DevPanel() {
     setIsOpen(open);
   };
 
+  const handleGitCommitAndPush = async () => {
+    console.log('💾 Git commit and push clicked');
+    
+    try {
+      // Check if there are changes first
+      const status = await fetchGitStatus();
+      if (!status || (status.staged === 0 && status.modified === 0 && status.untracked === 0)) {
+        toast.info('אין שינויים לשמירה');
+        return;
+      }
+
+      toast.loading('מריץ סקריפט Git...', { id: 'git-push' });
+      
+      // Trigger VS Code task using vscode:// protocol
+      // This will open the task runner in VS Code
+      const taskCommand = 'vscode://task/Git:%20Commit%20and%20Push';
+      
+      // Try to run the task
+      window.open(taskCommand, '_self');
+      
+      toast.success('✅ Task מופעל! בדוק את הטרמינל למטה', { id: 'git-push', duration: 3000 });
+      
+      // Auto-refresh git data after 5 seconds
+      setTimeout(() => {
+        loadGitData();
+        toast.success('✅ Git history עודכן!');
+      }, 5000);
+      
+    } catch (error) {
+      console.error('Error during git commit and push:', error);
+      toast.error('❌ שגיאה בהפעלת Task');
+    }
+  };
+
   const handleHardRefresh = async () => {
     console.log('🔄 Hard refresh clicked');
     try {
@@ -224,6 +258,18 @@ export function DevPanel() {
 
   return (
     <div className="fixed top-4 left-4 z-[9999] flex gap-2 pointer-events-auto">
+      {/* Git Commit & Push Button */}
+      <Button
+        onClick={handleGitCommitAndPush}
+        variant="outline"
+        size="icon"
+        className="bg-background/95 backdrop-blur-sm border-2 border-green-500/50 hover:border-green-500 hover:bg-green-500/10 shadow-lg cursor-pointer"
+        title="שמור ל-Git ודחוף ל-GitHub"
+        type="button"
+      >
+        <GitCommitIcon className="h-4 w-4 text-green-500" />
+      </Button>
+
       {/* Hard Refresh Button */}
       <Button
         onClick={handleHardRefresh}

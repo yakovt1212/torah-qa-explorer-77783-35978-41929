@@ -9,7 +9,7 @@ interface QuickSelectorState {
 }
 
 const STORAGE_KEY = 'quickSelector_preferences';
-const AUTO_HIDE_DELAY = 5000; // 5 seconds
+// AUTO_HIDE_DELAY removed - auto-hide feature disabled
 
 export function useQuickSelector(isMobile: boolean, startMinimized: boolean = false) {
   const [state, setState] = useState<QuickSelectorState>(() => {
@@ -41,69 +41,15 @@ export function useQuickSelector(isMobile: boolean, startMinimized: boolean = fa
   });
 
   const lastInteractionRef = useRef(Date.now());
-  const autoHideTimerRef = useRef<NodeJS.Timeout | null>(null);
+  // autoHideTimerRef removed - auto-hide feature disabled
 
   // Save to localStorage whenever state changes
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
 
-  // Auto-hide logic (only on desktop, only if not pinned and not minimized)
-  useEffect(() => {
-    console.log('[QuickSelector Auto-Hide] 🔄 Effect triggered', {
-      isMobile,
-      isPinned: state.isPinned,
-      isMinimized: state.isMinimized,
-      isVisible: state.isVisible,
-      hasActiveTimer: autoHideTimerRef.current !== null
-    });
-
-    // Always clear any existing timer first
-    if (autoHideTimerRef.current) {
-      console.log('[QuickSelector Auto-Hide] Clearing existing timer');
-      clearTimeout(autoHideTimerRef.current);
-      autoHideTimerRef.current = null;
-    }
-
-    // Don't start new timer if pinned, minimized, mobile, OR NOT VISIBLE
-    if (isMobile || state.isPinned || state.isMinimized || !state.isVisible) {
-      console.log('[QuickSelector Auto-Hide] Not starting timer - conditions not met');
-      return;
-    }
-
-    // Start auto-hide timer ONLY if conditions allow
-    console.log('[QuickSelector Auto-Hide] Starting new auto-hide timer for', AUTO_HIDE_DELAY, 'ms');
-    autoHideTimerRef.current = setTimeout(() => {
-      console.log('[QuickSelector Auto-Hide] Timer fired! Using functional setState to check CURRENT state...');
-      
-      // Use functional setState to get CURRENT state (not closure state!)
-      setState(prev => {
-        console.log('[QuickSelector Auto-Hide] Current state check:', {
-          isPinned: prev.isPinned,
-          isMinimized: prev.isMinimized,
-          isVisible: prev.isVisible
-        });
-        
-        // Only hide if CURRENTLY not pinned, not minimized, and visible
-        if (!prev.isPinned && !prev.isMinimized && prev.isVisible) {
-          console.log('[QuickSelector Auto-Hide] ✅ Conditions met - HIDING sidebar');
-          return { ...prev, isVisible: false };
-        }
-        
-        console.log('[QuickSelector Auto-Hide] ❌ Conditions NOT met - keeping sidebar visible');
-        return prev; // No change
-      });
-    }, AUTO_HIDE_DELAY);
-
-    // Cleanup on unmount or dependency change
-    return () => {
-      if (autoHideTimerRef.current) {
-        console.log('[QuickSelector Auto-Hide] Cleanup - clearing timer');
-        clearTimeout(autoHideTimerRef.current);
-        autoHideTimerRef.current = null;
-      }
-    };
-  }, [isMobile, state.isPinned, state.isMinimized, state.isVisible]);
+  // Auto-hide feature DISABLED - user controls open/close manually via toggle button
+  // This prevents the dialog from automatically closing after opening
 
   const setVisible = useCallback((visible: boolean) => {
     console.log('🔵 useQuickSelector.setVisible called with:', visible);
