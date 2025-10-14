@@ -47,6 +47,15 @@ $CHANGED_LIST
   Write-Host "💾 יוצר קומיט..." -ForegroundColor Cyan
   git commit -m $COMMIT_MSG
   
+  # Pull with rebase to sync with remote before pushing
+  Write-Host "🔄 מסנכרן עם GitHub (pull --rebase)..." -ForegroundColor Cyan
+  git pull --rebase origin $BRANCH
+  
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host "⚠️ יש קונפליקטים! פתור אותם ידנית ואז הרץ: git rebase --continue" -ForegroundColor Yellow
+    exit 1
+  }
+  
   # Push
   Write-Host "📤 דוחף ל-GitHub..." -ForegroundColor Cyan
   git push origin $BRANCH
