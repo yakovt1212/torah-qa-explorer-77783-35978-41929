@@ -411,12 +411,6 @@ const Index = () => {
         </Tooltip>
       </TooltipProvider>
 
-      {/* SW Version Indicator */}
-      {import.meta.env.PROD && (
-        <div className="fixed bottom-2 left-2 text-xs bg-black/70 text-white px-2 py-1 rounded shadow-lg backdrop-blur-sm z-40">
-          SW: {swVersion}
-        </div>
-      )}
 
       {/* Search */}
       <SearchButton onClick={openSearch} />
