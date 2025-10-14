@@ -298,4 +298,56 @@ All colors MUST be HSL.
   .animate-spin-slow {
     animation: spin-slow 3s linear infinite;
   }
+
+  /* Viewport mode overrides */
+  html.force-mobile {
+    /* Force mobile view */
+    --mobile-override: 1;
+  }
+
+  html.force-tablet {
+    /* Force tablet view */
+    --tablet-override: 1;
+  }
+
+  html.force-desktop {
+    /* Force desktop view */
+    --desktop-override: 1;
+  }
+
+  /* Responsive container adjustments for forced modes */
+  html.force-mobile .container {
+    max-width: 100% !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  html.force-tablet .container {
+    max-width: 768px !important;
+  }
+
+  html.force-desktop .container {
+    max-width: 1280px !important;
+  }
+
+  /* Quick Selector Button Animations */
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.95;
+      transform: scale(1.02);
+    }
+  }
+
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Smooth transitions for dialog */
+  [data-radix-dialog-content] {
+    animation-duration: 0.25s !important;
+  }
 }

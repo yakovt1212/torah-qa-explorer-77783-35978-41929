@@ -20,6 +20,8 @@ interface QuickSelectorProps {
   totalPesukimInPerek: number;
   selectedPasuk: number | null;
   onPasukSelect: (pasukNum: number | null) => void;
+  // QuickSelector state from parent
+  quickSelectorState?: ReturnType<typeof useQuickSelector>;
 }
 
 export const QuickSelector = ({
@@ -31,8 +33,12 @@ export const QuickSelector = ({
   totalPesukimInPerek,
   selectedPasuk,
   onPasukSelect,
+  quickSelectorState,
 }: QuickSelectorProps) => {
   const isMobile = useIsMobile();
+  
+  // Use passed state if available, otherwise create own hook
+  const ownHookState = useQuickSelector(isMobile);
   const {
     isVisible,
     isPinned,
@@ -45,7 +51,7 @@ export const QuickSelector = ({
     setViewMode,
     setSidebarWidth,
     recordInteraction,
-  } = useQuickSelector(isMobile);
+  } = quickSelectorState || ownHookState;
 
   const displayedPerakim = useMemo(() => {
     if (!sefer) return [];
@@ -88,18 +94,31 @@ export const QuickSelector = ({
 
   if (!sefer) return null;
 
+  console.log('🟢 QuickSelector Render:', {
+    isVisible,
+    isPinned,
+    isMinimized,
+    isMobile,
+    seferName: sefer?.sefer_name,
+  });
+
   // Render as Dialog/Popup (both mobile and desktop)
   return (
-    <Dialog open={isVisible} onOpenChange={setVisible}>
+    <Dialog open={isVisible} onOpenChange={(open) => {
+      console.log('🟡 Dialog onOpenChange called:', open);
+      setVisible(open);
+    }}>
       <DialogContent className={cn(
-        "max-h-[90vh] overflow-y-auto",
-        isMobile ? "max-w-[95vw]" : "max-w-4xl"
+        "max-h-[92vh] overflow-y-auto",
+        isMobile ? "max-w-[95vw]" : "max-w-7xl w-[95vw]"
       )}>
         <DialogHeader>
-          <DialogTitle className="text-center text-xl">בחירה מהירה</DialogTitle>
+          <DialogTitle className="text-center text-2xl font-bold bg-gradient-to-l from-primary via-primary to-sidebar-background bg-clip-text text-transparent">
+            בחירה מהירה
+          </DialogTitle>
         </DialogHeader>
         
-        <div className="px-2">
+        <div className="px-1 sm:px-2">
           <QuickSelectorContent
             sefer={sefer}
             viewMode={viewMode}
@@ -171,43 +190,45 @@ const QuickSelectorContent = ({
   togglePinned,
   toggleMinimized,
 }: QuickSelectorContentProps) => {
-  const gridColsForParshiot = isMobile ? "grid-cols-1" : 
+  // Grid layout - תצוגה אופקית למקסימום ניצול המסך
+  const gridColsForParshiot = isMobile ? "grid-cols-2" : 
     isMinimized ? "grid-cols-1" :
-    sidebarWidth === 'wide' ? "grid-cols-2 xl:grid-cols-3" : "grid-cols-1";
+    sidebarWidth === 'wide' ? "grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6" : "grid-cols-3 xl:grid-cols-4";
 
-  const gridColsForPerakim = isMobile ? "grid-cols-2 xs:grid-cols-3 sm:grid-cols-4" :
+  const gridColsForPerakim = isMobile ? "grid-cols-4 xs:grid-cols-5 sm:grid-cols-6" :
     isMinimized ? "grid-cols-1" :
-    sidebarWidth === 'wide' ? "grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7" : "grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5";
+    sidebarWidth === 'wide' ? "grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12" : "grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10";
 
-  const gridColsForPesukim = isMobile ? "grid-cols-3 xs:grid-cols-4 sm:grid-cols-5" :
+  const gridColsForPesukim = isMobile ? "grid-cols-5 xs:grid-cols-6 sm:grid-cols-8" :
     isMinimized ? "grid-cols-1" :
-    sidebarWidth === 'wide' ? "grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8" : "grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6";
+    sidebarWidth === 'wide' ? "grid-cols-10 xl:grid-cols-12 2xl:grid-cols-15" : "grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12";
 
   return (
     <>
       <div className="space-y-4">
           {/* Parshiot Section */}
           {viewMode === 'all' || selectedParsha === null ? (
-            <Collapsible open={viewMode === 'all'} className="space-y-2">
+            <Collapsible open={viewMode === 'all'} className="space-y-3">
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-between hover:bg-accent/50"
+                  className="w-full justify-between hover:bg-accent/50 bg-secondary/30 rounded-lg py-3"
                 >
-                  <span className="font-semibold">פרשות ({sefer.parshiot.length})</span>
-                  {viewMode === 'accordion' && <ChevronDown className="h-4 w-4" />}
+                  <span className="font-bold text-lg text-primary">📖 פרשות ({sefer.parshiot.length})</span>
+                  {viewMode === 'accordion' && <ChevronDown className="h-5 w-5 text-primary" />}
                 </Button>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <div className={cn("grid gap-3", gridColsForParshiot)} dir="rtl">
+                <div className={cn("grid gap-2", gridColsForParshiot)} dir="rtl">
                   {sefer.parshiot.map((parsha) => (
                     <Button
                       key={parsha.parsha_id}
                       onClick={() => onParshaSelect(parsha.parsha_id)}
                       variant={selectedParsha === parsha.parsha_id ? "default" : "outline"}
                       className={cn(
-                        "justify-start text-right h-auto py-3 px-4",
-                        isMobile && "min-h-[3rem] text-base"
+                        "justify-center text-center h-auto py-2.5 px-3 font-semibold transition-all hover:scale-105",
+                        selectedParsha === parsha.parsha_id && "bg-primary text-primary-foreground shadow-lg",
+                        isMobile && "min-h-[2.5rem] text-sm"
                       )}
                     >
                       <span className="truncate">{parsha.parsha_name}</span>
@@ -234,14 +255,14 @@ const QuickSelectorContent = ({
 
           {/* Perakim Section */}
           {displayedPerakim.length > 0 && (viewMode === 'all' || selectedParsha !== null) && (
-            <Collapsible open={viewMode === 'all' || selectedPerek === null} className="space-y-2">
+            <Collapsible open={viewMode === 'all' || selectedPerek === null} className="space-y-3">
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-between hover:bg-accent/50"
+                  className="w-full justify-between hover:bg-accent/50 bg-secondary/30 rounded-lg py-3"
                 >
-                  <span className="font-semibold">פרקים ({displayedPerakim.length})</span>
-                  {viewMode === 'accordion' && selectedParsha !== null && <ChevronDown className="h-4 w-4" />}
+                  <span className="font-bold text-lg text-primary">📚 פרקים ({displayedPerakim.length})</span>
+                  {viewMode === 'accordion' && selectedParsha !== null && <ChevronDown className="h-5 w-5 text-primary" />}
                 </Button>
               </CollapsibleTrigger>
               <CollapsibleContent>
@@ -252,8 +273,8 @@ const QuickSelectorContent = ({
                       onClick={() => onPerekSelect(perek.perek_num)}
                       variant="outline"
                       className={cn(
-                        "h-auto py-2",
-                        selectedPerek === perek.perek_num && "bg-primary text-primary-foreground hover:bg-primary/90",
+                        "h-auto py-2 px-3 font-semibold transition-all hover:scale-105",
+                        selectedPerek === perek.perek_num && "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md",
                         isMobile && "min-h-[2.5rem] text-base"
                       )}
                     >
@@ -281,9 +302,9 @@ const QuickSelectorContent = ({
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-between hover:bg-accent/50"
+                  className="w-full justify-between hover:bg-accent/50 bg-secondary/30 rounded-lg py-3"
                 >
-                  <span className="font-semibold">פסוקים ({totalPesukimInPerek})</span>
+                  <span className="font-bold text-lg text-primary">📜 פסוקים ({totalPesukimInPerek})</span>
                 </Button>
               </CollapsibleTrigger>
               <CollapsibleContent>
@@ -294,8 +315,8 @@ const QuickSelectorContent = ({
                       onClick={() => onPasukSelect(pasukNum)}
                       variant="outline"
                       className={cn(
-                        "h-auto py-2",
-                        selectedPasuk === pasukNum && "bg-primary text-primary-foreground hover:bg-primary/90",
+                        "h-auto py-2 px-2 font-semibold transition-all hover:scale-105",
+                        selectedPasuk === pasukNum && "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md",
                         isMobile && "min-h-[2.5rem] text-base"
                       )}
                     >

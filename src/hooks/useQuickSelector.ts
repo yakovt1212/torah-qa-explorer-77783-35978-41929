@@ -106,7 +106,13 @@ export function useQuickSelector(isMobile: boolean, startMinimized: boolean = fa
   }, [isMobile, state.isPinned, state.isMinimized, state.isVisible]);
 
   const setVisible = useCallback((visible: boolean) => {
-    setState(prev => ({ ...prev, isVisible: visible }));
+    console.log('🔵 useQuickSelector.setVisible called with:', visible);
+    setState(prev => {
+      console.log('🔵 Previous state:', prev);
+      const newState = { ...prev, isVisible: visible };
+      console.log('🔵 New state:', newState);
+      return newState;
+    });
     lastInteractionRef.current = Date.now();
   }, []);
 

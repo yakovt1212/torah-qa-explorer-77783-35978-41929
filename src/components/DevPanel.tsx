@@ -56,6 +56,14 @@ export function DevPanel() {
   // Only show in development mode
   const isDev = import.meta.env.DEV;
 
+  // Debug: Log when component mounts
+  useEffect(() => {
+    if (isDev) {
+      console.log('🎯 DevPanel mounted - isDev:', isDev);
+      console.log('🎯 Panel state:', { isOpen });
+    }
+  }, [isDev, isOpen]);
+
   // Intercept console methods
   useEffect(() => {
     if (!isDev) return;
@@ -148,7 +156,13 @@ export function DevPanel() {
     toast.info('Console נוקה');
   };
 
+  const handlePanelToggle = (open: boolean) => {
+    console.log('🎯 Panel toggle clicked:', open);
+    setIsOpen(open);
+  };
+
   const handleHardRefresh = async () => {
+    console.log('🔄 Hard refresh clicked');
     try {
       // Clear all caches
       if ('caches' in window) {
@@ -209,25 +223,29 @@ export function DevPanel() {
   };
 
   return (
-    <div className="fixed top-4 left-4 z-50 flex gap-2">
+    <div className="fixed top-4 left-4 z-[9999] flex gap-2 pointer-events-auto">
       {/* Hard Refresh Button */}
       <Button
         onClick={handleHardRefresh}
         variant="outline"
         size="icon"
-        className="bg-background/80 backdrop-blur-sm border-2 border-orange-500/50 hover:border-orange-500 hover:bg-orange-500/10"
+        className="bg-background/95 backdrop-blur-sm border-2 border-orange-500/50 hover:border-orange-500 hover:bg-orange-500/10 shadow-lg cursor-pointer"
         title="ריענון חזק - ניקוי מלא של כל המטמון"
+        type="button"
       >
         <RefreshCw className="h-4 w-4 text-orange-500" />
       </Button>
 
       {/* Dev Panel */}
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <Sheet open={isOpen} onOpenChange={handlePanelToggle}>
         <SheetTrigger asChild>
           <Button
             variant="outline"
             size="icon"
-            className="bg-background/80 backdrop-blur-sm border-2 border-primary/50 hover:border-primary"
+            className="bg-background/95 backdrop-blur-sm border-2 border-primary/50 hover:border-primary shadow-lg cursor-pointer"
+            title="פאנל פיתוח - לחץ לפתיחה"
+            type="button"
+            onClick={() => console.log('🖱️ Button clicked directly')}
           >
             <Settings className="h-4 w-4 animate-spin-slow" />
           </Button>

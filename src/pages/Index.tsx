@@ -5,6 +5,7 @@ import { SeferSelector } from "@/components/SeferSelector";
 import { VirtualizedPasukList } from "@/components/VirtualizedPasukList";
 import { QuickSelector } from "@/components/QuickSelector";
 import { Settings } from "@/components/Settings";
+import { ViewportSelector } from "@/components/ViewportSelector";
 
 import { SearchButton } from "@/components/search/SearchButton";
 import { SearchDialog } from "@/components/search/SearchDialog";
@@ -293,6 +294,7 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 bg-background/10 backdrop-blur-sm rounded-lg p-1">
               <Settings />
+              <ViewportSelector />
               {/* Toggle Sidebar Button */}
               <TooltipProvider>
                 <Tooltip>
@@ -359,6 +361,7 @@ const Index = () => {
             totalPesukimInPerek={totalPesukimInPerek}
             selectedPasuk={selectedPasuk}
             onPasukSelect={setSelectedPasuk}
+            quickSelectorState={quickSelector}
           />
         </Suspense>
 
@@ -390,11 +393,16 @@ const Index = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              onClick={() => quickSelector.setVisible(!quickSelector.isVisible)}
-              className="fixed bottom-6 left-6 h-16 w-16 rounded-full bg-primary hover:bg-primary/90 shadow-xl z-50 transition-all hover:scale-110"
+              onClick={() => {
+                console.log('🔵 Quick Selector Button Clicked!');
+                console.log('Current state:', quickSelector.isVisible);
+                quickSelector.setVisible(!quickSelector.isVisible);
+                console.log('New state should be:', !quickSelector.isVisible);
+              }}
+              className="fixed bottom-6 left-6 h-16 w-16 rounded-full bg-primary hover:bg-primary/90 shadow-xl z-[9998] transition-all hover:scale-110 pointer-events-auto cursor-pointer"
               size="icon"
             >
-              <Menu className="h-7 w-7 text-primary-foreground" />
+              <Menu className="h-7 w-7 text-primary-foreground pointer-events-none" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="right">
