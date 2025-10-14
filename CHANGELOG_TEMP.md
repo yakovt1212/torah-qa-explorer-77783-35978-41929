@@ -1,17 +1,17 @@
-# Changelog - גרסה 2025.10.14.2138
+# Changelog - גרסה 2025.10.14.2140
 
 ## פרטי גרסה
-- **תאריך**: 2025-10-14 21:38:31
-- **Commit**: cd49859
+- **תאריך**: 2025-10-14 21:40:00
+- **Commit**: a596aad
 - **Branch**: main
 
 ## שינויים בגרסה זו
 ### קבצים ששונו:
-M	scripts/git-commit-push.ps1
+M	.husky/pre-commit.ps1
 
 ### הודעות Commit אחרונות:
+a596aad 🔧 תיקון pre-commit hook - לא חוסם commits יותר
+34302cf 🔄 Auto-sync v2025.10.14.2138
 cd49859 🔄 עדכון סקריפט Git - הוספת pull rebase אוטומטי
 4fccb14 🔄 Auto-sync v2025.10.14.2136
 85408a8 🔄 עדכון ידני מ-DevPanel - גרסה 2025.10.15.0032
-b604d1e 🔄 עדכון ידני מ-DevPanel - גרסה 2025.10.14.2322
-d9cf64c 🔄 Auto-sync v2025.10.14.1943
