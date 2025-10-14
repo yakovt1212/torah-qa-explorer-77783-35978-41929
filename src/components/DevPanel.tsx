@@ -100,30 +100,30 @@ export function DevPanel() {
     };
   }, [isDev]);
 
+  // Function to load Git data
+  const loadGitData = async () => {
+    setIsLoadingGit(true);
+    try {
+      const [history, status, branches] = await Promise.all([
+        fetchGitHistory(20),
+        fetchGitStatus(),
+        fetchGitBranches()
+      ]);
+
+      setGitHistory(history);
+      setGitStatus(status);
+      setGitBranches(branches);
+    } catch (error) {
+      console.error('Error loading git data:', error);
+      toast.error('שגיאה בטעינת נתוני Git');
+    } finally {
+      setIsLoadingGit(false);
+    }
+  };
+
   // Load Git data when panel opens
   useEffect(() => {
     if (!isDev || !isOpen || gitHistory.length > 0) return;
-
-    const loadGitData = async () => {
-      setIsLoadingGit(true);
-      try {
-        const [history, status, branches] = await Promise.all([
-          fetchGitHistory(20),
-          fetchGitStatus(),
-          fetchGitBranches()
-        ]);
-
-        setGitHistory(history);
-        setGitStatus(status);
-        setGitBranches(branches);
-      } catch (error) {
-        console.error('Error loading git data:', error);
-        toast.error('שגיאה בטעינת נתוני Git');
-      } finally {
-        setIsLoadingGit(false);
-      }
-    };
-
     loadGitData();
   }, [isDev, isOpen, gitHistory.length]);
 
