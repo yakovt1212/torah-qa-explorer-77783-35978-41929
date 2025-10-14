@@ -167,7 +167,7 @@ export function DevPanel() {
     try {
       // Check if there are changes first
       const status = await fetchGitStatus();
-      if (!status || (status.staged === 0 && status.modified === 0 && status.untracked === 0)) {
+      if (!status || (status.staged.length === 0 && status.modified.length === 0 && status.untracked.length === 0)) {
         toast.info('אין שינויים לשמירה');
         return;
       }
