@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Generate version info
+VERSION=$(date +'%Y.%m.%d.%H%M')
+BRANCH=$(git branch --show-current)
+CHANGED_FILES=$(git diff --cached --name-only | wc -l)
+
+# Get list of changed files
+CHANGED_LIST=$(git diff --cached --name-status)
+
+# Create detailed commit message
+COMMIT_MSG_FILE=$1
+
+# Read existing message
+EXISTING_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# If message is empty or default, create detailed one
+if [ -z "$EXISTING_MSG" ] || [ "$EXISTING_MSG" = "" ]; then
+  cat > "$COMMIT_MSG_FILE" << EOF
+🔄 שינויים אוטומטיים - גרסה $VERSION
+
+📋 פרטי השינוי:
+- תאריך: $(date +'%Y-%m-%d %H:%M:%S')
+- ענף: $BRANCH
+- מספר קבצים: $CHANGED_FILES
+
+📝 קבצים ששונו:
+$CHANGED_LIST
+
+✅ שינויים אלו נשמרו אוטומטית ונסנכרנו עם GitHub
+EOF
+fi

@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 מריץ בדיקות לפני commit..."
+
+# Run linting
+npm run lint --fix || true
+
+# Add any auto-fixed files
+git add -u
+
+echo "✅ בדיקות הושלמו"

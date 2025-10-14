@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "📤 מסנכרן עם GitHub..."
+
+# Get current branch
+BRANCH=$(git branch --show-current)
+
+# Push to remote
+git push origin "$BRANCH" || {
+  echo "⚠️ לא ניתן לדחוף ל-GitHub. אנא בדוק את החיבור."
+  exit 0
+}
+
+echo "✅ סונכרן בהצלחה עם GitHub!"

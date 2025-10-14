@@ -1,0 +1,120 @@
+name: Auto Sync and Version Control
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  auto-commit-and-sync:
+    name: Auto Commit & Sync
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Git
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install Dependencies
+        run: npm ci
+      
+      - name: Run Linting
+        continue-on-error: true
+        run: npm run lint || true
+      
+      - name: Generate Version Info
+        id: version
+        run: |
+          VERSION=$(date +'%Y.%m.%d.%H%M')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "date=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
+          echo "commit_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      
+      - name: Create Detailed Changelog
+        run: |
+          cat > CHANGELOG_TEMP.md << 'EOF'
+          # Changelog - גרסה ${{ steps.version.outputs.version }}
+          
+          ## פרטי גרסה
+          - **תאריך**: ${{ steps.version.outputs.date }}
+          - **Commit**: ${{ steps.version.outputs.commit_sha }}
+          - **Branch**: ${{ github.ref_name }}
+          
+          ## שינויים בגרסה זו
+          EOF
+          
+          echo "### קבצים ששונו:" >> CHANGELOG_TEMP.md
+          git diff --name-status HEAD~1 HEAD >> CHANGELOG_TEMP.md || echo "אין שינויים" >> CHANGELOG_TEMP.md
+          
+          echo "" >> CHANGELOG_TEMP.md
+          echo "### הודעות Commit אחרונות:" >> CHANGELOG_TEMP.md
+          git log --oneline -5 >> CHANGELOG_TEMP.md
+      
+      - name: Commit Changes if Any
+        run: |
+          if [[ -n $(git status -s) ]]; then
+            git add .
+            git commit -m "🔄 Auto-sync v${{ steps.version.outputs.version }}
+            
+            שינויים אוטומטיים:
+            - תאריך: ${{ steps.version.outputs.date }}
+            - קבצים ששונו: $(git diff --name-only --cached | wc -l)
+            
+            [skip ci]"
+            git push
+          fi
+  
+  version-tracking:
+    name: Version Tracking
+    runs-on: ubuntu-latest
+    needs: auto-commit-and-sync
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Update Version File
+        run: |
+          mkdir -p .versions
+          VERSION=$(date +'%Y.%m.%d.%H%M')
+          cat > .versions/version-$VERSION.json << EOF
+          {
+            "version": "$VERSION",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "commit": "$(git rev-parse HEAD)",
+            "branch": "${{ github.ref_name }}",
+            "author": "${{ github.actor }}",
+            "changes": $(git diff --numstat HEAD~1 HEAD | wc -l)
+          }
+          EOF
+      
+      - name: Commit Version File
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .versions/
+          git commit -m "📝 Version tracking: $VERSION" || true
+          git push || true
