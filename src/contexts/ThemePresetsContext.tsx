@@ -31,12 +31,6 @@ export function ThemePresetsProvider({ children }: { children: ReactNode }) {
     return saved ? JSON.parse(saved) : DEFAULT_SETTINGS;
   });
 
-  // Save to localStorage whenever settings change
-  useEffect(() => {
-    localStorage.setItem('theme_presets', JSON.stringify(settings));
-    applyTheme();
-  }, [settings]);
-
   // Apply theme to document
   const applyTheme = () => {
     const preset = THEME_PRESETS.find(p => p.id === settings.preset);
@@ -44,21 +38,33 @@ export function ThemePresetsProvider({ children }: { children: ReactNode }) {
 
     const root = document.documentElement;
 
-    // Apply colors
-    Object.entries(preset.colors).forEach(([key, value]) => {
-      const cssVar = `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
-      root.style.setProperty(cssVar, value);
-    });
+    // Apply colors as CSS variables (shadcn/ui format)
+    root.style.setProperty('--background', preset.colors.background.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--foreground', preset.colors.foreground.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--primary', preset.colors.primary.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--primary-foreground', preset.colors.primaryForeground.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--secondary', preset.colors.secondary.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--secondary-foreground', preset.colors.secondaryForeground.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--accent', preset.colors.accent.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--accent-foreground', preset.colors.accentForeground.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--muted', preset.colors.muted.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--muted-foreground', preset.colors.mutedForeground.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--card', preset.colors.card.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--card-foreground', preset.colors.cardForeground.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--border', preset.colors.border.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--destructive', preset.colors.destructive.replace('hsl(', '').replace(')', ''));
+    root.style.setProperty('--destructive-foreground', preset.colors.destructiveForeground.replace('hsl(', '').replace(')', ''));
 
     // Apply background pattern
     if (settings.backgroundPattern !== 'none') {
       const pattern = BACKGROUND_PATTERNS[settings.backgroundPattern];
       const opacity = settings.patternOpacity / 100;
-      root.style.setProperty('--background-pattern', pattern);
-      root.style.setProperty('--pattern-opacity', opacity.toString());
+      // Apply pattern as background image
+      document.body.style.setProperty('--bg-pattern', `url("data:image/svg+xml,${encodeURIComponent(pattern)}")`);
+      document.body.style.setProperty('--bg-pattern-opacity', opacity.toString());
     } else {
-      root.style.setProperty('--background-pattern', 'none');
-      root.style.setProperty('--pattern-opacity', '0');
+      document.body.style.removeProperty('--bg-pattern');
+      document.body.style.removeProperty('--bg-pattern-opacity');
     }
 
     // Apply font
@@ -83,6 +89,13 @@ export function ThemePresetsProvider({ children }: { children: ReactNode }) {
     // Apply border radius
     root.style.setProperty('--radius', `${settings.borderRadius}px`);
   };
+
+  // Save to localStorage and apply theme whenever settings change
+  useEffect(() => {
+    localStorage.setItem('theme_presets', JSON.stringify(settings));
+    applyTheme();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings]);
 
   const setPreset = (preset: ThemePreset) => {
     setSettings(prev => ({ ...prev, preset }));

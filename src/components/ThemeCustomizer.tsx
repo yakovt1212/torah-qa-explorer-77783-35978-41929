@@ -91,6 +91,8 @@ export function ThemeCustomizer() {
                   </div>
                   <div className="text-xs text-muted-foreground">{preset.description}</div>
                   <div className="flex gap-1 mt-2">
+                    {/* Color preview circles - inline styles needed for dynamic colors */}
+                    {/* eslint-disable-next-line @typescript-eslint/prefer-as-const */}
                     <div 
                       className="h-4 w-4 rounded-full border" 
                       style={{ backgroundColor: preset.colors.primary }}
@@ -124,6 +126,7 @@ export function ThemeCustomizer() {
               <SelectContent>
                 {HEBREW_FONTS.map((font) => (
                   <SelectItem key={font.id} value={font.id}>
+                    {/* Font preview - inline style needed for dynamic font family */}
                     <span style={{ fontFamily: font.family }}>
                       {font.displayName}
                     </span>
@@ -132,6 +135,7 @@ export function ThemeCustomizer() {
               </SelectContent>
             </Select>
             <div className="p-4 rounded-lg border bg-card">
+              {/* Font preview - inline style needed for dynamic font family */}
               <p 
                 className="text-center text-lg"
                 style={{ fontFamily: HEBREW_FONTS.find(f => f.id === settings.hebrewFont)?.family }}
