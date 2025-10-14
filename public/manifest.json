@@ -1,0 +1,20 @@
+{
+  "name": "חמישה חומשי תורה - שאלות ופירושים",
+  "short_name": "תורה",
+  "description": "אפליקציה ללמידת התורה עם שאלות ופירושים",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e40af",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["education", "books"],
+  "lang": "he",
+  "dir": "rtl"
+}
