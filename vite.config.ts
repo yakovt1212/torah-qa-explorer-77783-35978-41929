@@ -9,7 +9,7 @@ import viteCompression from 'vite-plugin-compression';
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
-    port: 4500, // פורט ייעודי לפרויקט - בטווח 4000-5000
+    port: 8080, // פורט ייעודי לפרויקט
     strictPort: true, // כשל אם הפורט תפוס (מונע בלבול)
     hmr: {
       overlay: true,
