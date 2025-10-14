@@ -8,6 +8,7 @@ import { FontSettingsProvider } from "@/contexts/FontSettingsContext";
 import { HighlightsProvider } from "@/contexts/HighlightsContext";
 import { NotesProvider } from "@/contexts/NotesContext";
 import { QuickSelectorSettingsProvider } from "@/contexts/QuickSelectorSettingsContext";
+import { BookmarksProvider } from "@/contexts/BookmarksContext";
 import { DevPanel } from "@/components/DevPanel";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -20,20 +21,22 @@ const App = () => (
       <FontSettingsProvider>
         <HighlightsProvider>
           <NotesProvider>
-            <QuickSelectorSettingsProvider>
-              <TooltipProvider>
-                <Toaster />
-                <Sonner />
-                <DevPanel />
-                <BrowserRouter>
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </BrowserRouter>
-              </TooltipProvider>
-            </QuickSelectorSettingsProvider>
+            <BookmarksProvider>
+              <QuickSelectorSettingsProvider>
+                <TooltipProvider>
+                  <Toaster />
+                  <Sonner />
+                  <DevPanel />
+                  <BrowserRouter>
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </BrowserRouter>
+                </TooltipProvider>
+              </QuickSelectorSettingsProvider>
+            </BookmarksProvider>
           </NotesProvider>
         </HighlightsProvider>
       </FontSettingsProvider>

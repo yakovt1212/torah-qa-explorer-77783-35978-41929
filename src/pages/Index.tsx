@@ -6,7 +6,7 @@ import { VirtualizedPasukList } from "@/components/VirtualizedPasukList";
 import { QuickSelector } from "@/components/QuickSelector";
 import { Settings } from "@/components/Settings";
 import { ViewportSelector } from "@/components/ViewportSelector";
-
+import { BookmarksPanel } from "@/components/BookmarksPanel";
 import { SearchButton } from "@/components/search/SearchButton";
 import { SearchDialog } from "@/components/search/SearchDialog";
 import { Card } from "@/components/ui/card";
@@ -295,6 +295,19 @@ const Index = () => {
             <div className="flex items-center gap-2 bg-background/10 backdrop-blur-sm rounded-lg p-1">
               <Settings />
               <ViewportSelector />
+              <BookmarksPanel 
+                onNavigate={(bookmark) => {
+                  setSelectedSefer(bookmark.sefer);
+                  setSelectedPerek(bookmark.perek);
+                  // Scroll to pasuk after rendering
+                  setTimeout(() => {
+                    const pasukElement = document.getElementById(`${bookmark.perek}-${bookmark.pasuk}`);
+                    if (pasukElement) {
+                      pasukElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                  }, 300);
+                }}
+              />
               {/* Toggle Sidebar Button */}
               <TooltipProvider>
                 <Tooltip>
