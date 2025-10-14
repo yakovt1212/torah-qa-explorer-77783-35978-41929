@@ -9,7 +9,8 @@ import viteCompression from 'vite-plugin-compression';
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
-    port: 8080,
+    port: 4500, // פורט ייעודי לפרויקט - בטווח 4000-5000
+    strictPort: true, // כשל אם הפורט תפוס (מונע בלבול)
     hmr: {
       overlay: true,
       timeout: 5000,
@@ -79,6 +80,12 @@ export default defineConfig(({ mode }) => ({
     define: {
       '{{BUILD_TIME}}': JSON.stringify(new Date().toISOString())
     },
+  },
+  // Preview server configuration
+  preview: {
+    port: 4501, // פורט preview - סמוך לפורט ה-dev
+    strictPort: true,
+    host: "::",
   },
   // Optimize dependencies
   optimizeDeps: {
