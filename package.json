@@ -9,10 +9,11 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "auto-commit": "node scripts/auto-commit.js",
-    "sync": "node scripts/sync-github.js",
-    "version:current": "node scripts/version-info.js",
+    "auto-commit": "node scripts/auto-commit.cjs",
+    "sync": "node scripts/sync-github.cjs",
+    "version:current": "node scripts/version-info.cjs",
     "version:history": "git log --oneline --graph --all --decorate -20",
+    "demo": "node scripts/demo.cjs",
     "prepare": "husky || true"
   },
   "dependencies": {
