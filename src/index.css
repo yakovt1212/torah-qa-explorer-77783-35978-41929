@@ -284,4 +284,18 @@ All colors MUST be HSL.
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-primary/50;
   }
+
+  /* Dev Panel animations */
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 3s linear infinite;
+  }
 }
