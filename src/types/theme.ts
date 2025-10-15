@@ -7,7 +7,14 @@ export type ThemePreset =
   | 'sunset'
   | 'lavender'
   | 'sepia'
-  | 'high-contrast';
+  | 'high-contrast'
+  | 'classic'
+  | 'cream'
+  | 'mint'
+  | 'rose-gold'
+  | 'sky-blue'
+  | 'coral'
+  | 'navy-gold';
 
 export type BackgroundPattern = 
   | 'none'

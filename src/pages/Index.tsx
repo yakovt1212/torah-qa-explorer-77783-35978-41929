@@ -318,9 +318,9 @@ const Index = () => {
       />
       
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-gradient-to-l from-primary via-primary to-sidebar-background shadow-lg">
-        <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-4 md:py-6 bg-blue-950 rounded-3xl">
-          <div className="flex items-center justify-between">
+      <header className="sticky top-0 z-50 shadow-lg flex justify-center" style={{ margin: '8px' }}>
+        <div className="px-4 sm:px-6 py-3 sm:py-4 md:py-6 max-w-4xl" style={{ backgroundColor: '#2C3A50', border: '1px solid #FFE066', borderRadius: '16px' }}>
+          <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 bg-background/10 backdrop-blur-sm rounded-lg p-1">
               <Settings />
               <ViewportSelector />
@@ -368,7 +368,7 @@ const Index = () => {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <div className="flex items-center gap-2 md:gap-3">
+            <div className="flex items-center gap-2 md:gap-3 flex-1 justify-center">
               <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-primary-foreground">
                 חמישה חומשי תורה - שאלות ופירושים
               </h1>
