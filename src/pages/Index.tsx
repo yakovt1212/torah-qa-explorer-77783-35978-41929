@@ -47,7 +47,10 @@ const Index = () => {
     try {
       // 1. Check in-memory cache first (instant)
       if (seferCache.has(seferId)) {
-        setSeferData(seferCache.get(seferId)!);
+        const cachedSefer = seferCache.get(seferId);
+        if (cachedSefer) {
+          setSeferData(cachedSefer);
+        }
         setSelectedParsha(null);
         setSelectedPerek(null);
         setSelectedPasuk(null);
@@ -71,7 +74,7 @@ const Index = () => {
       // 3. Load from network (slower)
       setLoading(true);
       
-      const seferFiles: Record<number, () => Promise<any>> = {
+      const seferFiles: Record<number, () => Promise<{ default: Sefer }>> = {
         1: () => import('../data/bereishit.json'),
         2: () => import('../data/shemot.json'),
         3: () => import('../data/vayikra.json'),
@@ -133,6 +136,7 @@ const Index = () => {
   // Load initial sefer on mount
   useEffect(() => {
     loadSefer(selectedSefer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSefer]);
 
   // Preload sefarim in background (delayed) - OPTIMIZED
@@ -148,7 +152,7 @@ const Index = () => {
         console.log(`[Preload] Progress: ${current}/${total}`);
       });
 
-      const seferFiles: Record<number, () => Promise<any>> = {
+      const seferFiles: Record<number, () => Promise<{ default: Sefer }>> = {
         1: () => import('../data/bereishit.json'),
         2: () => import('../data/shemot.json'),
         3: () => import('../data/vayikra.json'),
@@ -262,6 +266,7 @@ const Index = () => {
     if (!seferData || selectedPerek === null) return 0;
     const pesukimInPerek = flattenedPesukim.filter(p => p.perek === selectedPerek);
     return pesukimInPerek.length > 0 ? Math.max(...pesukimInPerek.map(p => p.pasuk_num)) : 0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flattenedPesukim, selectedPerek]);
 
   const handleBreadcrumbNavigate = (level: 'sefer' | 'parsha' | 'perek', value?: number) => {
