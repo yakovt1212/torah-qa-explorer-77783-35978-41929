@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { toHebrewNumber } from "@/utils/hebrewNumbers";
 import { TextHighlighter } from "@/components/TextHighlighter";
 import { NotesDialog } from "@/components/NotesDialog";
-import { BookmarkButton } from "@/components/BookmarkButton";
 import { useFontSettings } from "@/contexts/FontSettingsContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -34,24 +33,12 @@ export const PasukDisplay = memo(({ pasuk, seferId }: PasukDisplayProps) => {
 
   if (totalQuestions === 0) return null;
   return (
-    <Card id={pasukId} className="overflow-hidden border-r-4 border-r-accent shadow-md hover:shadow-lg transition-all">
+    <Card className="overflow-hidden border-r-4 border-r-accent shadow-md hover:shadow-lg transition-all">
       <CardHeader className="bg-gradient-to-l from-secondary/30 to-card">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2 justify-between">
-              <div className="flex items-center gap-1">
-                <BookmarkButton
-                  sefer={pasuk.sefer}
-                  seferName={pasuk.sefer_name}
-                  perek={pasuk.perek}
-                  pasuk={pasuk.pasuk_num}
-                  parshaId={pasuk.parsha_id}
-                  parshaName={pasuk.parsha_name}
-                  pasukText={pasuk.text}
-                  size="sm"
-                />
-                <NotesDialog pasukId={pasukId} pasukText={pasuk.text} />
-              </div>
+              <NotesDialog pasukId={pasukId} pasukText={pasuk.text} />
               <Badge variant="outline" className="font-bold">
                 פרק {toHebrewNumber(pasuk.perek)} פסוק {toHebrewNumber(pasuk.pasuk_num)}
               </Badge>

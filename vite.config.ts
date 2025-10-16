@@ -1,11 +1,11 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import path from "path";
+import node_path from "node:path";
 import { componentTagger } from "lovable-tagger";
 import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
 
-// https://vitejs.dev/config/
+// https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => ({
     watch: {
       usePolling: false,
       interval: 100,
+      ignored: ['**/test-results/**', '**/playwright-report/**', '**/e2e/**'],
     },
   },
   plugins: [
@@ -46,7 +47,7 @@ export default defineConfig(({ mode }) => ({
   ].filter(Boolean),
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": node_path.resolve(__dirname, "./src"),
     },
   },
   build: {
