@@ -6,10 +6,11 @@ import { VirtualizedPasukList } from "@/components/VirtualizedPasukList";
 import { QuickSelector } from "@/components/QuickSelector";
 import { Settings } from "@/components/Settings";
 import { ViewportSelector } from "@/components/ViewportSelector";
-import { BookmarksPanel } from "@/components/BookmarksPanel";
 import { ThemeCustomizer } from "@/components/ThemeCustomizer";
+import { BookmarksPanel } from "@/components/BookmarksPanel";
 import { CommandPalette } from "@/components/CommandPalette";
 import { QuickJumpDialog } from "@/components/QuickJumpDialog";
+
 import { SearchButton } from "@/components/search/SearchButton";
 import { SearchDialog } from "@/components/search/SearchDialog";
 import { Card } from "@/components/ui/card";
@@ -294,55 +295,16 @@ const Index = () => {
     setSelectedPasuk(pasuk.pasuk_num);
     closeSearch();
   };
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
-      {/* Command Palette */}
-      <CommandPalette
-        onNavigateToSefer={(seferId) => setSelectedSefer(seferId)}
-        onOpenBookmarks={() => {}}
-        onOpenSettings={() => {}}
-        onOpenThemeCustomizer={() => {}}
-        onToggleQuickSelector={() => quickSelector.setVisible(!quickSelector.isVisible)}
-      />
-      
-      {/* Quick Jump Dialog */}
-      <QuickJumpDialog
-        onNavigate={(sefer, perek, pasuk) => {
-          setSelectedSefer(sefer);
-          setSelectedPerek(perek);
-          if (pasuk) {
-            setTimeout(() => {
-              const pasukElement = document.getElementById(`${perek}-${pasuk}`);
-              if (pasukElement) {
-                pasukElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }
-            }, 300);
-          }
-        }}
-      />
-      
       {/* Header */}
-      <header className="sticky top-0 z-50 shadow-lg flex justify-center" style={{ margin: '8px' }}>
-        <div className="px-4 sm:px-6 py-3 sm:py-4 md:py-6 max-w-4xl" style={{ backgroundColor: '#2C3A50', border: '1px solid #FFE066', borderRadius: '16px' }}>
-          <div className="flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-50 bg-gradient-to-l from-primary via-primary to-sidebar-background shadow-lg">
+        <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-4 md:py-6 bg-blue-950 rounded-3xl">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 bg-background/10 backdrop-blur-sm rounded-lg p-1">
               <Settings />
               <ViewportSelector />
-              <ThemeCustomizer />
-              <BookmarksPanel 
-                onNavigate={(bookmark) => {
-                  setSelectedSefer(bookmark.sefer);
-                  setSelectedPerek(bookmark.perek);
-                  // Scroll to pasuk after rendering
-                  setTimeout(() => {
-                    const pasukElement = document.getElementById(`${bookmark.perek}-${bookmark.pasuk}`);
-                    if (pasukElement) {
-                      pasukElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                  }, 300);
-                }}
-              />
               {/* Toggle Sidebar Button */}
               <TooltipProvider>
                 <Tooltip>
@@ -373,7 +335,7 @@ const Index = () => {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <div className="flex items-center gap-2 md:gap-3 flex-1 justify-center">
+            <div className="flex items-center gap-2 md:gap-3">
               <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-primary-foreground">
                 חמישה חומשי תורה - שאלות ופירושים
               </h1>
