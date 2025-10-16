@@ -1,20 +1,14 @@
-# Netlify configuration for Torah QA Explorer
-
 [build]
-  # Build command
   command = "npm run build"
-  
-  # Directory that contains the deploy-ready files
   publish = "dist"
 
-# Redirect all requests to index.html for client-side routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Security headers
 [[headers]]
+  # Global security headers. You can complement/override via public/_headers if needed.
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
@@ -22,14 +16,16 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
 
-# Cache static assets
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
 [[headers]]
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Cache service worker
 [[headers]]
   for = "/sw.js"
   [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
+    Cache-Control = "max-age=0, no-cache, no-store, must-revalidate"
