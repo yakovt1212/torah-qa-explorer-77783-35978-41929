@@ -296,7 +296,7 @@ const Index = () => {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
+    <div className="min-h-screen" style={{ backgroundColor: '#FCF6E3' }}>
       {/* Command Palette */}
       <CommandPalette
         onNavigateToSefer={(seferId) => setSelectedSefer(seferId)}
@@ -324,7 +324,7 @@ const Index = () => {
       
       {/* Header */}
       <header className="sticky top-0 z-50 shadow-lg flex justify-center" style={{ margin: '8px' }}>
-        <div className="px-4 sm:px-6 py-3 sm:py-4 md:py-6 w-full" style={{ backgroundColor: '#1e40af', border: '1px solid #FFE066', borderRadius: '16px' }}>
+        <div className="px-4 sm:px-6 py-3 sm:py-4 md:py-6 w-full" style={{ backgroundColor: '#2C3A50', border: '1px solid #FFE066', borderRadius: '16px' }}>
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 bg-background/10 backdrop-blur-sm rounded-lg p-1">
               <Settings />

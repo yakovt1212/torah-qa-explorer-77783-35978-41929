@@ -187,7 +187,7 @@ const AnswerSection = memo(({ perush, isMobile = false, fontSettings }: { perush
         <div className="p-4 bg-card rounded-md border-r-2 border-accent">
           <p 
             className={cn(
-              "leading-relaxed text-muted-foreground",
+              "leading-relaxed",
               "text-right whitespace-normal"
             )}
             style={{
@@ -195,6 +195,8 @@ const AnswerSection = memo(({ perush, isMobile = false, fontSettings }: { perush
               fontSize: `${isMobile ? 14 : fontSettings.answerSize}px`,
               wordBreak: 'break-word',
               overflowWrap: 'break-word',
+              color: '#000000',
+              fontWeight: '500'
             }}
           >
             {perush.text}
