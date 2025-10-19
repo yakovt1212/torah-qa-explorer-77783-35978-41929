@@ -1,4 +1,4 @@
-import { MoreHorizontal, Palette, Type, Layout, Database, Download, Upload, CheckCircle2 } from "lucide-react";
+import { MoreHorizontal, Palette, Type, Layout, Database, Download, Upload, CheckCircle2, Paintbrush } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -10,6 +10,7 @@ import { useFontSettings } from "@/contexts/FontSettingsContext";
 import { useQuickSelectorSettings } from "@/contexts/QuickSelectorSettingsContext";
 import { useHighlights } from "@/contexts/HighlightsContext";
 import { useNotes } from "@/contexts/NotesContext";
+import { ColorEditorPanel } from "@/components/ColorEditorPanel";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
@@ -68,6 +69,7 @@ export const Settings = () => {
   } = useNotes();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isImporting, setIsImporting] = useState(false);
+  const [isColorEditorOpen, setIsColorEditorOpen] = useState(false);
   const stats = getDataStats();
   const handleExport = () => {
     try {
@@ -103,7 +105,12 @@ export const Settings = () => {
   };
   return <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-9 w-9 hover:bg-accent/20 transition-colors text-slate-50">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="h-9 w-9 hover:bg-accent/20 transition-colors text-slate-50"
+          aria-label="הגדרות"
+        >
           <MoreHorizontal className="h-5 w-5" />
         </Button>
       </DialogTrigger>
@@ -146,6 +153,32 @@ export const Settings = () => {
                   </div>
                 </Card>)}
             </RadioGroup>
+
+            <Separator className="my-6" />
+
+            {/* Live Color Editor */}
+            <Card className="p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 border-2 border-dashed border-purple-300 dark:border-purple-700">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-lg bg-purple-100 dark:bg-purple-900/50">
+                  <Paintbrush className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div className="flex-1 text-right">
+                  <h3 className="font-bold text-lg mb-2">עורך צבעים מתקדם 🎨</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    ערוך את כל משתני ה-CSS בזמן אמת וראה שינויים מיידיים! 
+                    מושלם לעיצוב ערכות נושא מותאמות אישית.
+                  </p>
+                  <Button 
+                    onClick={() => setIsColorEditorOpen(true)}
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                    data-testid="open-color-editor-btn"
+                  >
+                    <Paintbrush className="w-4 h-4 ml-2" />
+                    פתח עורך צבעים חי
+                  </Button>
+                </div>
+              </div>
+            </Card>
           </TabsContent>
 
           <TabsContent value="fonts" className="space-y-6">
@@ -402,5 +435,11 @@ export const Settings = () => {
           </TabsContent>
         </Tabs>
       </DialogContent>
+
+      {/* Color Editor Panel */}
+      <ColorEditorPanel 
+        isOpen={isColorEditorOpen} 
+        onClose={() => setIsColorEditorOpen(false)} 
+      />
     </Dialog>;
 };

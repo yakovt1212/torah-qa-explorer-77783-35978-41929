@@ -36,7 +36,7 @@ export const QuickSelector = ({
   const isMobile = useIsMobile();
   
   // Use passed state if available, otherwise create own hook
-  const ownHookState = useQuickSelector(isMobile);
+  const ownHookState = useQuickSelector(isMobile, false, false); // Disable auto-hide
   const {
     isVisible,
     isPinned,
@@ -88,6 +88,10 @@ export const QuickSelector = ({
   const handlePasukSelect = (pasukNum: number | null) => {
     onPasukSelect(pasukNum);
     recordInteraction();
+    // Close the Quick Selector after selecting a pasuk
+    if (pasukNum !== null) {
+      setVisible(false);
+    }
   };
 
   if (!sefer) return null;

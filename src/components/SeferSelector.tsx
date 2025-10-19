@@ -17,7 +17,7 @@ const SEFARIM = [
 
 export const SeferSelector = ({ selectedSefer, onSeferSelect }: SeferSelectorProps) => {
   return (
-    <div className="grid grid-cols-5 gap-3 p-4 bg-card rounded-lg shadow-md">
+    <div className="grid grid-cols-5 gap-3 p-4 rounded-lg shadow-md" style={{ backgroundColor: '#1e40af' }}>
       {SEFARIM.map((sefer) => (
         <Button
           key={sefer.id}
@@ -27,6 +27,7 @@ export const SeferSelector = ({ selectedSefer, onSeferSelect }: SeferSelectorPro
             "h-auto py-6 flex flex-col gap-2 transition-all",
             selectedSefer === sefer.id && "shadow-lg scale-105"
           )}
+          style={{ backgroundColor: selectedSefer === sefer.id ? '#1e3a8a' : 'transparent' }}
         >
           <BookOpen className="h-6 w-6" />
           <span className="text-lg font-bold">{sefer.name}</span>

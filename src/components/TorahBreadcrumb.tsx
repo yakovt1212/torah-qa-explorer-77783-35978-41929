@@ -8,6 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Sefer } from "@/types/torah";
+import { toHebrewNumber } from "@/utils/hebrewNumbers";
 
 interface TorahBreadcrumbProps {
   seferData: Sefer | null;
@@ -79,14 +80,14 @@ export const TorahBreadcrumb = ({
             <BreadcrumbItem>
               {selectedPasuk === null ? (
                 <BreadcrumbPage className="text-base font-semibold text-primary">
-                  פרק {selectedPerek}
+                  פרק {toHebrewNumber(selectedPerek)}
                 </BreadcrumbPage>
               ) : (
                 <BreadcrumbLink
                   onClick={() => onNavigate('perek', selectedPerek)}
                   className="text-base font-semibold cursor-pointer hover:text-primary transition-colors"
                 >
-                  פרק {selectedPerek}
+                  פרק {toHebrewNumber(selectedPerek)}
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>
@@ -101,7 +102,7 @@ export const TorahBreadcrumb = ({
             </BreadcrumbSeparator>
             <BreadcrumbItem>
               <BreadcrumbPage className="text-base font-semibold text-primary">
-                פסוק {selectedPasuk}
+                פסוק {toHebrewNumber(selectedPasuk)}
               </BreadcrumbPage>
             </BreadcrumbItem>
           </>

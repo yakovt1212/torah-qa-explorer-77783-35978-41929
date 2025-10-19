@@ -18,8 +18,15 @@ export default defineConfig(({ mode }) => ({
     watch: {
       usePolling: false,
       interval: 100,
+      ignored: ['**/test-results/**', '**/playwright-report/**', '**/e2e/**'],
+    },
+    // Prevent server from closing
+    middlewareMode: false,
+    fs: {
+      strict: false,
     },
   },
+  logLevel: 'info',
   plugins: [
     react(),
     mode === "development" && componentTagger(),
@@ -83,12 +90,13 @@ export default defineConfig(({ mode }) => ({
   },
   // Preview server configuration
   preview: {
-    port: 4501, // פורט preview - סמוך לפורט ה-dev
+    port: 8081, // פורט preview
     strictPort: true,
     host: "::",
   },
-  // Optimize dependencies
+  // Optimize dependencies - consolidated
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom'],
+    exclude: [],
   },
 }));

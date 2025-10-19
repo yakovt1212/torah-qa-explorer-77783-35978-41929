@@ -4,11 +4,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { ThemePresetsProvider } from "@/contexts/ThemePresetsContext";
 import { FontSettingsProvider } from "@/contexts/FontSettingsContext";
 import { HighlightsProvider } from "@/contexts/HighlightsContext";
 import { NotesProvider } from "@/contexts/NotesContext";
 import { QuickSelectorSettingsProvider } from "@/contexts/QuickSelectorSettingsContext";
-import { ColorEditorProvider } from "@/contexts/ColorEditorContext";
+import { BookmarksProvider } from "@/contexts/BookmarksContext";
 import { DevPanel } from "@/components/DevPanel";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -18,16 +19,17 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
-      <ColorEditorProvider>
+      <ThemePresetsProvider>
         <FontSettingsProvider>
           <HighlightsProvider>
             <NotesProvider>
-              <QuickSelectorSettingsProvider>
-                <TooltipProvider>
-                  <Toaster />
-                  <Sonner />
-                  <DevPanel />
-                  <BrowserRouter>
+              <BookmarksProvider>
+                <QuickSelectorSettingsProvider>
+                  <TooltipProvider>
+                    <Toaster />
+                    <Sonner />
+                    <DevPanel />
+                    <BrowserRouter>
                     <Routes>
                       <Route path="/" element={<Index />} />
                       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
@@ -36,10 +38,11 @@ const App = () => (
                   </BrowserRouter>
                 </TooltipProvider>
               </QuickSelectorSettingsProvider>
-            </NotesProvider>
-          </HighlightsProvider>
-        </FontSettingsProvider>
-      </ColorEditorProvider>
+            </BookmarksProvider>
+          </NotesProvider>
+        </HighlightsProvider>
+      </FontSettingsProvider>
+    </ThemePresetsProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );
